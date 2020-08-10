@@ -41,10 +41,35 @@ View list of Products
 ![View](images/view.JPG)
 
 Admin Login
-![Admin Login](images/admin login.JPG)
+<img src="images/admin login.JPG" />
 
 Addition of Product
-![Add form](images/add form.JPG)
+<img src="images/add form.JPG" />
+
+JSON file before addition 
+    <img src="images/json file before add.JPG" />
+
+JSON file after addition
+    <img src="images/json file after add.JPG" />
+    
+UI after addition
+<img src="images/form after add.JPG" />
+
+Updation of Product
+<img src="images/update prod1 form.JPG" />
+
+UI before updation
+<img src="images/form before update.JPG" />
+
+UI after updation
+<img src="images/after updation.JPG" />
+
+JSON file after updation
+<img src="images/file after updation.JPG" />
+    
+   
+
+
 
 
 
