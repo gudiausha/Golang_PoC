@@ -338,35 +338,6 @@ func delete(w http.ResponseWriter, r*http.Request){
   }
 //******************************************************************************
 
-            // fmt.Println("index: ",index)
-            // fmt.Println("the item is: ",item)
-            // fmt.Println("Before change:" , product[index])
-            // product[index] = item
-            // fmt.Println("After change: ",product[index])
-            // fmt.Println("the whole product list is :" ,product)
-            // fmt.Println(item)
-
-
-
-            //product = append(product,*new_product)
-
-    //  }
-
-//  }
-  // if r.Method == "POST"{
-  //   getPrice,err := strconv.Atoi(r.FormValue("price"))
-  //   checkError(err)
-  //   item.Price = getPrice
-  //   item.Availability = r.FormValue("avail")
-  //   item.Product_Name = r.FormValue("product_name")
-  //   item.Id = requestId
-  //   product = append(product,item)
-  //   fmt.Println(product)
-
-  //}
-  //json.NewEncoder(w).Encode(&Products{})
-//}
-
 //a function to contain all the routes
 func handleRequests() {
 
@@ -391,67 +362,6 @@ func main() {
 
   }
 
-  // //json file is opened, read & converted to byte array & stored in content variable
-  //   var content, err = ioutil.ReadFile("D:/go1.14.3.windows-amd64/go/ecomm/data.json")
-  //   if err != nil {
-  //       fmt.Println(err.Error())
-  //   }
-  //   //convert the byte array to string
-  //   responseString := string(content)
-  //   templ,err1 := template.ParseFiles("static/view.html")
-  //   err1 = templ.ExecuteTemplate(w,"view.html",responseString)
-  //   if err1 != nil {
-  //     fmt.Println(err1.Error())
-  //   }
-  // }
-//******************************************************************************
-
-//   file, err := os.OpenFile("data.json", os.O_RDWR|os.O_APPEND, 0666)
-//   if err != nil {
-// 		fmt.Println(err)
-// 	}
-//   b, err := ioutil.ReadAll(file)
-//   var prods Prod
-// 	json.Unmarshal(b, &prods.product)
-//   if err != nil {
-// 		fmt.Println(err)
-// 	}
-//   au := &prods
-//   fmt.Println(au)
-//   t, err := template.ParseFiles("static/view.html")
-//   if err != nil {
-// 		fmt.Println(err)
-// 	}
-// 	t.ExecuteTemplate(w, au)
-// }
-
-  //fmt.Println("Endpoint Hit: Opened file")
-  //product_json = json.NewEncoder(w).Encode(product)
-  //load_data()
-  //to return json response
-  //json.NewEncoder(w).Encode(product)
-  // templ,err1 := template.ParseFiles("static/view.html")
-  // err1 = templ.ExecuteTemplate(w,"view.html",product)
-  // if err1 != nil {
-  //   fmt.Println(err1.Error())
-  // }
-  //}
+ 
 
 
-//*****************************************************************************
-//convert to json & write to data.json file
-// b, err := json.Marshal(productss)
-//   if err != nil {
-//       http.Error(w, err.Error(), 500)
-//       return
-//   }
-// f.Write(b)
-// f.Close()
-// //fmt.Fprintf(w, "Product added")
-// http.Redirect(w, r, "/add", 301)
-// templ,err1 := template.ParseFiles("static/create.html")
-// err1 = templ.ExecuteTemplate(w,"create.html",nil)
-// if err1 != nil {
-//   fmt.Println(err1.Error())
-// }
-//}
