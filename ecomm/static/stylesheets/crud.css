@@ -1,0 +1,5 @@
+ul{
+column-count: 3;
+column-rule: dotted 1px #333;
+list-style-type: none;
+}

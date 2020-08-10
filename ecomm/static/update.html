@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>PoC</title>
+  </head>
+  <body>
+    <center><h1>Product Updation</h1>
+    <br>
+    <br>
+    <form action="" method="post">
+      <!-- <label for="id">ID</label>
+      <input type="number" name="id" id="id" value=""><br><br><br> -->
+      <label for="product_name">Product Name</label>
+      <input type="text" name="product_name" id="product_name" value="{{ .Product_Name}}" readonly><br><br><br>
+      <label for="price">Price</label>
+      <input type="number" name="price" id="price" value="{{ .Price}}"><br><br><br>
+      <label for="Availability">Availability</label>
+      <input type="text" name="avail" id="avail" value="{{ .Availability}}" ><br><br><br>
+      <button type="submit">Update</button>
+    </form>
+    </center>
+  </body>
+</html>
