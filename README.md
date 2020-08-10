@@ -34,39 +34,28 @@ The folder structure along with their descriptions is given below.
 4. Go to a brower and type `http//localhost:10002`, the app runs in the local server
 
 ### Snapshots 
-Homepage
-![Homepage](images/homepage.JPG)
+To view the images of the webapp click here:
+[Snapshots](SNAPSHOTS.md)
 
-View list of Products
-![View](images/view.JPG)
-
-Admin Login
-<img src="images/admin login.JPG" />
-
-Addition of Product
-<img src="images/add form.JPG" />
-
-JSON file before addition 
-    <img src="images/json file before add.JPG" />
-
-JSON file after addition
-    <img src="images/json file after add.JPG" />
+### Tasks
+* Completed:
+    - [x] Reading data from database
+    - [x] Appending data to database
+    - [x] Updating data in database
+    - [x] Deleting data from database
+    - [x] Simple admin login (using if condition)
+    - [x] Rendering the homepage/view/admin/crud pages to html (this was done using basic html & css)
     
-UI after addition
-<img src="images/form after add.JPG" />
-
-Updation of Product
-<img src="images/update prod1 form.JPG" />
-
-UI before updation
-<img src="images/form before update.JPG" />
-
-UI after updation
-<img src="images/after updation.JPG" />
-
-JSON file after updation
-<img src="images/file after updation.JPG" />
-    
+* To Do:
+    - [ ] Authorization using either JWT/Session Cookies in golang
+         - [ ] Writing login & logout views
+    - [ ] Integrating with Vue-js
+         - [ ] Fix cross site errors
+         - [ ] Display the product list in tabular form
+         - [ ] After updation redirect to CRUD page
+         - [ ] After deletion redirect to CRUD page
+         - [ ] Design login & logout pages (if needed can revamp the whole site)
+         
    
 
 
