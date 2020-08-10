@@ -34,5 +34,19 @@ The folder structure along with their descriptions is given below.
 4. Go to a brower and type `http//localhost:10002`, the app runs in the local server
 
 ### Snapshots 
+Homepage
+![Homepage](images/homepage.JPG)
+
+View list of Products
+![View](images/view.JPG)
+
+Admin Login
+![Admin Login](images/admin login.JPG)
+
+Addition of Product
+![Add form](images/add form.JPG)
+
+
+
                 
           
