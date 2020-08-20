@@ -47,14 +47,14 @@ To view the images of the webapp click here:
     - [x] Rendering the homepage/view/admin/crud pages to html (this was done using basic html & css)
     
 * To Do:
-    - [ ] Authorization using either JWT/Session Cookies in golang
-         - [ ] Writing login & logout views
-    - [ ] Integrating with Vue-js
-         - [ ] Fix cross site errors
-         - [ ] Display the product list in tabular form
-         - [ ] After updation redirect to CRUD page
-         - [ ] After deletion redirect to CRUD page
-         - [ ] Design login & logout pages (if needed can revamp the whole site)
+    - [x] Authorization using either JWT/Session Cookies in golang
+         - [x] Writing login & logout views
+    - [x] Integrating with Vue-js
+         - [x] Fix cross site errors
+         - [x] Display the product list in tabular form
+         - [x] After updation redirect to CRUD page
+         - [x] After deletion redirect to CRUD page
+         - [x] Design login & logout pages (if needed can revamp the whole site)
          
    
 
