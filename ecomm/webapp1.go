@@ -6,12 +6,13 @@ import (
   "io/ioutil"
   "net/http"
   "github.com/gorilla/mux"
-  "html/template"
+  "github.com/gorilla/securecookie"
   "encoding/json"
   "os"
   "strconv"
 )
 
+var file_location = "D:/go1.14.3.windows-amd64/go/ecomm/data.json"
 var port string
 
 //datatype for the app
@@ -24,10 +25,22 @@ type Products struct{
   Availability string
 }
 
+type Credential struct{
+  UserName string
+  UserPassword string
+}
+
+// type Id_No struct{
+//   Id_No int
+// }
+
+
 //declaring slice with struct datatype
 //syntax : var slice_name [] element_type
 // here 'Products' is name of the struct(element_type) declared above
 var product []Products
+var cred []Credential
+//var id_no []Id_No
 
 //error checking function
 func checkError(err error) {
@@ -51,7 +64,7 @@ func Idgenerator() int {
 //**************************load json*******************************************
 // Description: load the json data,unmarshal it & save to a slice (product)
 func load_data(){
-  file, err := os.OpenFile("D:/go1.14.3.windows-amd64/go/ecomm/data.json", os.O_RDWR|os.O_APPEND, 0666)
+  file, err := os.OpenFile(file_location, os.O_RDWR|os.O_APPEND, 0666)
   //specify your file path ^
   //fmt.Println(file)
   checkError(err)
@@ -66,170 +79,160 @@ func load_data(){
 }
 //****************************************************************************
 
-//**************************homepage*******************************************
-//Description: Renders the homepage.
-//Connected files: static/homepage.html ; static/stylesheets/homepage.css
-
-func homePage(w http.ResponseWriter, r *http.Request) {
-  w.Header().Set("Content-Type", "text/html")
-  fmt.Println("Endpoint Hit: homePage")
-  //to render html with net/http
-  http.ServeFile(w, r, "static/homepage.html")
-  //fmt.Fprintf(w, "Welcome to the HomePage!")
-}
-//to render using html/template package:
-//func homePage(w http.ResponseWriter, r *http.Request){
-// templ,err1 := template.ParseFiles("static/homepage.html")
-// err1 = templ.ExecuteTemplate(w,"homepage.html",nil)
-//   if err1 != nil{
-//     fmt.Println(err1.Error())
-//}
-//}
-//*****************************************************************************
-
 //**************************view list of products******************************
-//Description: json file is read & the data is stored in slice(product). This
-//is passed to html page & the data is rendered in table form (by looping thro'
-//slice).
-//Connected files : static/view.html; static/stylesheets/view.css
+//Description: json file is read & the data is stored in slice(product). It is
+//then encoded & sent to server. Same func for /crud page also.
 
 func view(w http.ResponseWriter, r *http.Request) {
-  w.Header().Set("Content-Type", "text/html")
+  w.Header().Set("Access-Control-Allow-Origin","*")
+  w.Header().Set("Access-Control-Allow-Headers","content-type")
+  w.Header().Set("Content-Type", "application/json")
   fmt.Println("Endpoint Hit: View list")
   load_data()
-	t, err := template.ParseFiles("static/view.html")
-	checkError(err)
-	t.Execute(w, product)
+  //to return json response
+  json.NewEncoder(w).Encode(product)
 }
 
-//alternate method of rendering json/string response are given below:
-
-//to pass json as it is to server
-//func view(w http.ResponseWriter, r *http.Request) {
-// w.Header().Set("Content-Type", "application/json")
-// fmt.Println("Endpoint Hit: View list")
-// load_data()
-//to return json response
-// json.NewEncoder(w).Encode(product)
-// }
-
-//to render string response to html
-//convert the byte array to string
-//responseString := string(content)
-//fmt.Fprint(w, responseString) ----> this is using net/http
-//                         or
-// templ,err1 := template.ParseFiles("static/view.html") --->using html/template
-// err1 = templ.ExecuteTemplate(w,"view.html",responseString)
-// if err1 != nil {
-//   fmt.Println(err1.Error())
-// }
 //*****************************************************************************
 
-//*************************CUD Ops Page****************************************
-//Description: Render the crud.html page once the admin logins with the
-//predefined credentials. contains the list of products along With their id,
-//name,price & Availability. Also has the links to update,delete & add functions.
-//Connected Files: static/crud.html ; static/stylesheets/crud.css
-func crud(w http.ResponseWriter, r *http.Request){
-  w.Header().Set("Content-Type", "text/html")
-  fmt.Println("Endpoint Hit: CUD Ops page")
-  load_data()
-  fmt.Println(product)
-  t, err := template.ParseFiles("static/crud.html")
-  checkError(err)
-  t.ExecuteTemplate(w, "crud.html", product)
-  //http.ServeFile(w, r, "static/crud.html")
-}
-//*****************************************************************************
+//***********************admin login/logout using cookie management************
+//new cookie is created each time application is run. securecookie is a struct
+// its inputs are haskey(compulsory),block-key(opti).
+var cookieHandler = securecookie.New(
+	securecookie.GenerateRandomKey(64),
+	securecookie.GenerateRandomKey(32))
 
-//***********************simple admin login************************************
-//here the admin credentials have been hardcoded
-//this will further be modified to (jwt/session management) if needed
-//Description : crud page is rendered when logged in
-//with hardcoded admin credentials
-//Connected files : static/admin.html
-func adlogin(w http.ResponseWriter, r *http.Request){
-  w.Header().Set("Content-Type", "text/html")
-  fmt.Println("Endpoint Hit: Admin Login hit")
-  //renders an empty login Page
-  //analogous to render_template in python flask framework
-  if r.Method != "POST"{
-    t,err := template.ParseFiles("static/admin.html")
-    checkError(err)
-    t.Execute(w,nil)
-    return
-  }
-  //a more compact way of writing both these functions must be done
-  if r.Method == "POST"{
-    username := r.FormValue("name")
-    password := r.FormValue("password")
-    //credentials logic subject to change
-    if username != "admin" && password !="adminpassword"{
-      http.ServeFile(w, r, "static/admin.html")
-      fmt.Fprintf(w, "Invalid Credentials.Admin Login only.")
-    }else{
-      redirect_url := "/crud"
-      http.Redirect(w,r,redirect_url,302)
-      //analogous to redirect_url in python flask framework
-    }
-  }
-  // http.Redirect(w,r,"/login",302)
+// func getUserName(r *http.Request) (userName string) {
+// 	if cookie, err := r.Cookie("session"); err == nil {
+// 		cookieValue := make(map[string]string)
+// 		if err = cookieHandler.Decode("session", cookie.Value, &cookieValue); err == nil {
+// 			userName = cookieValue["name"]
+// 		}
+// 	}
+// 	return userName
+// }
+
+func setSession(userName string, w http.ResponseWriter) {
+	value := map[string]string{
+		"name": userName,
+	}
+  //:= 64bit(32bit("cookiename",value to be encoded))
+	if encoded, err := cookieHandler.Encode("session", value); err == nil {
+		cookie := &http.Cookie{
+			Name:  "session",
+			Value: encoded,
+			Path:  "/",
+		}
+    fmt.Println("Setting the cookie:",cookie)
+		http.SetCookie(w, cookie)
+    json.NewEncoder(w).Encode(cookie)
+
+	}
 }
+//
+func clearSession(w http.ResponseWriter) {
+	cookie := &http.Cookie{
+		Name:   "session",
+		Value:  "",
+		Path:   "/",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, cookie)
+  json.NewEncoder(w).Encode(cookie)
+}
+
+// login handler
+
+func adlogin(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Access-Control-Allow-Origin","*")
+  w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+  w.Header().Set("Access-Control-Allow-Headers","content-type")
+  w.Header().Set("Content-Type", "application/json")
+  fmt.Println("Endpoint Hit: Admin login func")
+  new_credentials := new(Credential)
+  _ = json.NewDecoder(r.Body).Decode(&new_credentials)
+  fmt.Println("Printing the credentials: ", new_credentials)
+  cred = append(cred,*new_credentials)
+  Name := new_credentials.UserName
+  Password := new_credentials.UserPassword
+
+  fmt.Println("Printing the username credentials:",Name)
+  fmt.Println("Printing the password credentials:",Password)
+  fmt.Println("Printing the credentials: ",*new_credentials)
+
+	if Name == "admin" && Password == "adminpassword" {
+		// .. check credentials ..
+    //name:= cred.Name
+    fmt.Println("going inside check credentials func")
+		setSession(Name, w)
+	}
+  // once this condition satisfies, it must go to the crud page.
+	// http.Redirect(response, request, redirectTarget, 302)
+}
+
+// logout handler
+
+func adlogout(w http.ResponseWriter, r *http.Request) {
+  w.Header().Set("Access-Control-Allow-Origin","*")
+  w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+  w.Header().Set("Access-Control-Allow-Headers","content-type")
+  w.Header().Set("Content-Type", "application/json")
+  fmt.Println("Endpoint Hit: Admin logout func")
+	clearSession(w)
+  //this must go to the view page after logout
+	//http.Redirect(response, request, "/", 302)
+}
+
 //*****************************************************************************
 
 //**********************add a product******************************************
-//Description:renders product addition form, once filled the values are
-//retrieved from the form and a new struct is defined. This is then appended
-//to the slice & the json file is re-written with this new slice.
-//Connected files: static/create.html
+//Description:The json values are retrieved and decoded to a new struct. An Id
+//is generated for json element. This is then added to the slice & the
+//the json file is re-written with this new slice.
+
 func create(w http.ResponseWriter, r *http.Request){
-  w.Header().Set("Content-Type", "text/html")
+  w.Header().Set("Access-Control-Allow-Origin","*")
+  w.Header().Set("Access-Control-Allow-Headers","content-type")
+  w.Header().Set("Content-Type", "application/json")
   fmt.Println("Endpoint Hit: Adding a product")
-  //renders an empty create form
-  if r.Method != "POST"{
-    t,err := template.ParseFiles("static/create.html")
-    err = t.ExecuteTemplate(w,"create.html",nil)
-    checkError(err)
-    return
-  }
   //a pointer to the predefined struct type is created here
   new_product := new(Products)
-
-  //incase the data.json file is empty & this is the first product to be created
-  //then the prod id is assumed to be 0(in sync with slice)
-  //else the id-generator func is called
+  _ = json.NewDecoder(r.Body).Decode(&new_product)
+  fmt.Println(new_product)
+  load_data()
+  //defer file.Close()
+  //fmt.Println("Before Change:",new_product.Id)
+  //ID generation:
   if len(product) == 0 {
     new_product.Id = 0
   }else{
     new_product.Id = Idgenerator()+1
   }
 
-  //other values(price,name & Availability) from the create form are retrieved
-  getPrice,err := strconv.Atoi(r.FormValue("price"))
-  checkError(err)
-  new_product.Price = getPrice
-  new_product.Product_Name = r.FormValue("product_name")
-  new_product.Availability = r.FormValue("avail")
-  // fmt.Println(new_product.Id,new_product.Price,new_product.Product_Name,new_product.Availability)
-
-  // the below lines : append the product to the slice & rewrite the json file
-  // & will get redirected to the crud ops page,where the new data will be displayed
-  //open the json file
-  file, err := os.OpenFile("D:/go1.14.3.windows-amd64/go/ecomm/data.json", os.O_RDWR, 0644)
-  // //fmt.Println(file)
-  checkError(err)
-  b, err := ioutil.ReadAll(file)
-  json.Unmarshal(b,&product)
-  checkError(err)
-  // //stop immediate closing of file
-  defer file.Close()
-  product = append(product,*new_product)
+  //fmt.Println("After Change: ",new_product.Id)
+  //fmt.Println("Printing the struct value", &new_product)
+  //fmt.Println("Printinsg the A value", a)
+  if new_product.Product_Name != " " {
+    product = append(product,*new_product)
+  }
   newdataBytes, err := json.MarshalIndent(&product, "", " ")
   // fmt.Println(newdataBytes)
-	checkError(err)
-	ioutil.WriteFile("D:/go1.14.3.windows-amd64/go/ecomm/data.json", newdataBytes, 0666)
+  checkError(err)
+  file, err := os.OpenFile(file_location, os.O_RDWR|os.O_APPEND, 0666)
+  checkError(err)
+  ioutil.WriteFile(file_location, newdataBytes, 0666)
   file.Close()
-	http.Redirect(w, r, "/crud", 301)
+
+  // product = append(product,*new_product)
+  // newdataBytes, err := json.MarshalIndent(&product, "", " ")
+  // // fmt.Println(newdataBytes)
+	// checkError(err)
+  // file, err := os.OpenFile(file_location, os.O_RDWR|os.O_APPEND, 0666)
+  // checkError(err)
+	// ioutil.WriteFile(file_location, newdataBytes, 0666)
+  // file.Close()
+  // fmt.Println("Printing the new struct",*new_product)
+  // fmt.Println("Printing the whole product", product)
 }
 //******************************************************************************
 
@@ -240,76 +243,66 @@ func create(w http.ResponseWriter, r *http.Request){
 // displayed in the update form where the admin can change the price & Availability
 //status.Once done based on the slice index of the product, the new details are
 //updated  & the json file is re-written. Then it is redirected to crud page.
-//Connected files : static/update.html
+
 func update(w http.ResponseWriter, r *http.Request){
+  w.Header().Set("Access-Control-Allow-Origin","*")
+  w.Header().Set("Access-Control-Allow-Headers","content-type")
   w.Header().Set("Content-Type", "text/html")
   fmt.Println("Endpoint Hit : Update")
+
+  new_id := new(Products)
+  _ = json.NewDecoder(r.Body).Decode(&new_id)
   // Get our params from the URL using Mux
   params := mux.Vars(r)
   // using this atoi method to parses the string into an integer
   requestId, _ := strconv.Atoi(params["id"])
+  fmt.Println(*new_id)
+  //requestId := new_id.Id
   // Loop through collection of prods and find one with the id from the params
+  load_data()
   for index, item := range product {
       if item.Id == requestId {
-          t, err := template.ParseFiles("static/update.html")
+          item.Price = new_id.Price
+          item.Availability = new_id.Availability
+          item.Product_Name = new_id.Product_Name
+          item.Id = requestId
+          //fmt.Println(item.Price,item.Availability,item.Product_Name,item.Id)
+          product[index] = item
+          newdataBytes, err := json.MarshalIndent(&product, "", " ")
+          // fmt.Println(newdataBytes)
           checkError(err)
-          t.Execute(w, item)
-          //json.NewEncoder(w).Encode(item)
-          //return
-          if r.Method == "POST"{
-            fmt.Println("into post method")
-            getPrice,err := strconv.Atoi(r.FormValue("price"))
-            checkError(err)
-            item.Price = getPrice
-            item.Availability = r.FormValue("avail")
-            item.Product_Name = r.FormValue("product_name")
-            item.Id = requestId
-            //fmt.Println(item.Price,item.Availability,item.Product_Name,item.Id)
-            file, err := os.OpenFile("D:/go1.14.3.windows-amd64/go/ecomm/data.json", os.O_RDWR, 0644)
-            checkError(err)
-            b, err := ioutil.ReadAll(file)
-            json.Unmarshal(b,&product)
-            checkError(err)
-            // //stop immediate closing of file
-            defer file.Close()
-            product[index] = item
-            newdataBytes, err := json.MarshalIndent(&product, "", " ")
-            // fmt.Println(newdataBytes)
-          	checkError(err)
-          	ioutil.WriteFile("D:/go1.14.3.windows-amd64/go/ecomm/data.json", newdataBytes, 0666)
-            file.Close()
-            // t, err := template.ParseFiles("static/crud.html")
-            // checkError(err)
-            // t.Execute(w,nil)
+          file, err := os.OpenFile(file_location, os.O_RDWR, 0644)
+          checkError(err)
+          ioutil.WriteFile(file_location, newdataBytes, 0666)
+          file.Close()
           }
-          http.Redirect(w, r, "/crud", 301)
+          //Once updated it must get redirected to crud page
+          //http.Redirect(w, r, "/crud", 301)
         }
       }
-    }
 //******************************************************************************
 
 //************************Delete a product**************************************
 // Description: Since slice index is in sync with product id, based on the id
 // the product is deleted from the slice & then the slice is re-written into
 // the data.json file. Then the crud page is displayed, with new list.
-//Connected files : static/crud.html
+
 func delete(w http.ResponseWriter, r*http.Request){
+  w.Header().Set("Access-Control-Allow-Origin","*")
+  w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
+  w.Header().Set("Access-Control-Allow-Headers","content-type")
   w.Header().Set("Content-Type", "text/html")
   fmt.Println("Endpoint Hit : Delete")
   // Get our params from the URL using Mux
   params := mux.Vars(r)
-  // using this atoi method to parses the string into an integer
   requestId, _ := strconv.Atoi(params["id"])
+  // id_delete := new(Id_No)
+  // _ = json.NewDecoder(r.Body).Decode(&id_delete)
+  // requestId := id_delete.Id_No
+  load_data()
   // Loop through collection of prods and find one with the id from the params
   for index, item := range product {
       if item.Id == requestId {
-        file, err := os.OpenFile("D:/go1.14.3.windows-amd64/go/ecomm/data.json", os.O_RDWR, 0644)
-        checkError(err)
-        b, err := ioutil.ReadAll(file)
-        json.Unmarshal(b,&product)
-        checkError(err)
-        // //stop immediate closing of file
-        defer file.Close()
         //This delete method is costly...as the input increases the time taken
         // also increases.
         // Remove the element at index i from product.
@@ -327,25 +320,24 @@ func delete(w http.ResponseWriter, r*http.Request){
         fmt.Println(product) // [{item.id,item.name,item.price,item.avail}]
         newdataBytes, err := json.MarshalIndent(&product, "", " ")
         // fmt.Println(newdataBytes)
+        file, err := os.OpenFile(file_location, os.O_RDWR, 0644)
         checkError(err)
-        ioutil.WriteFile("D:/go1.14.3.windows-amd64/go/ecomm/data.json", newdataBytes, 0666)
+        ioutil.WriteFile(file_location, newdataBytes, 0666)
         file.Close()
-        t, err := template.ParseFiles("static/crud.html")
-        checkError(err)
-        t.Execute(w,nil)
       }
     }
   }
-//******************************************************************************
+//*****************************************************************************
 
 //a function to contain all the routes
 func handleRequests() {
 
     myRouter := mux.NewRouter().StrictSlash(true)
-    myRouter.HandleFunc("/", homePage)
+    //myRouter.HandleFunc("/", homePage)
     myRouter.HandleFunc("/view", view)
-    myRouter.HandleFunc("/login",adlogin)
-    myRouter.HandleFunc("/crud",crud)
+    myRouter.HandleFunc("/adminlogin",adlogin)
+    myRouter.HandleFunc("/logout",adlogout)
+    myRouter.HandleFunc("/crud",view)
     myRouter.HandleFunc("/add",create)
     myRouter.HandleFunc("/update/{id}",update)
     myRouter.HandleFunc("/delete/{id}",delete)
@@ -358,10 +350,4 @@ func main() {
       port = ":10002"
       fmt.Println("Listening And Serving on " + "http://localhost"+port)
       handleRequests()
-
-
-  }
-
- 
-
-
+    }
