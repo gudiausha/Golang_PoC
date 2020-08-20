@@ -1,37 +1,40 @@
 ### Snapshots
 
-Homepage
-![Homepage](images/homepage.JPG)
-
 View list of Products
-![View](images/view.JPG)
-
-Admin Login
-<img src="images/admin login.JPG" />
-
-Addition of Product
-<img src="images/add form.JPG" />
+<img src="go pics/View func.JPG" />
 
 JSON file before addition 
-    <img src="images/json file before add.JPG" />
+<img src="go pics/View json file.JPG" />
+
+Addition of Product
+<img src="go pics/add product.JPG" />
 
 JSON file after addition
-    <img src="images/json file after add.JPG" />
-    
-UI after addition
-<img src="images/form after add.JPG" />
+<img src="go pics/json file add.JPG" />
 
 Updation of Product
-<img src="images/update prod1 form.JPG" />
-
-UI before updation
-<img src="images/form before update.JPG" />
-
-UI after updation
-<img src="images/after updation.JPG" />
+<img src="go pics/update product.JPG" />
 
 JSON file after updation
-<img src="images/file after updation.JPG" />
+<img src="go pics/json file after update.JPG" />
 
-Deletion
-<img src="images/after deletion.JPG" />
+Deletion of Product
+<img src="go pics/delete.JPG" />
+
+JSON file after deletion
+<img src="go pics/delete json.JPG" />
+
+Admin Login
+<img src="go pics/login.JPG" />
+
+Admin Logout
+<img src="go pics/logout.JPG" />
+
+
+
+
+
+
+    
+
+
