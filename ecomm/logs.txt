@@ -1,0 +1,22 @@
+INFO: 2020/08/24 17:26:49 webapp2.go:104: Endpoint Hit: View
+INFO: 2020/08/24 17:28:07 webapp2.go:212: Endpoint Hit: Add
+INFO: 2020/08/24 17:28:07 webapp2.go:232: Product added successfully: {5 Nokia 2000 No}
+INFO: 2020/08/24 17:28:29 webapp2.go:212: Endpoint Hit: Add
+ERROR: 2020/08/24 17:28:29 webapp2.go:239: 405 :Product Name empty
+INFO: 2020/08/24 17:29:02 webapp2.go:104: Endpoint Hit: View
+INFO: 2020/08/24 17:29:41 webapp2.go:265: Endpoint Hit : Update
+INFO: 2020/08/24 17:29:41 webapp2.go:284: Updated: {5 Baloon 2000 Yes-No}
+INFO: 2020/08/24 17:30:42 webapp2.go:104: Endpoint Hit: View
+INFO: 2020/08/24 17:31:15 webapp2.go:265: Endpoint Hit : Update
+ERROR: 2020/08/24 17:31:15 webapp2.go:303: 404 :Request ID not found
+INFO: 2020/08/24 17:32:25 webapp2.go:321: Endpoint Hit : Delete
+INFO: 2020/08/24 17:32:25 webapp2.go:342: Deleted: [{0 Samsung 4000 Yes} {1 Samsung1 4000 Yes} {2 LG-K10 4000 Yes} {3 hii 4000 Yes} {4 check10 100 yes}]
+INFO: 2020/08/24 17:32:43 webapp2.go:321: Endpoint Hit : Delete
+ERROR: 2020/08/24 17:32:43 webapp2.go:359: 404 :Request ID not found
+INFO: 2020/08/24 17:37:34 webapp2.go:162: Endpoint Hit: Admin login
+WARNING: 2020/08/24 17:37:34 webapp2.go:183: 401 :Unauthorized user
+INFO: 2020/08/24 17:39:56 webapp2.go:104: Endpoint Hit: View
+INFO: 2020/08/24 17:41:03 webapp2.go:265: Endpoint Hit : Update
+INFO: 2020/08/24 17:41:03 webapp2.go:284: Updated: {4 check45 100 yes}
+INFO: 2020/08/24 17:41:12 webapp2.go:265: Endpoint Hit : Update
+ERROR: 2020/08/24 17:41:12 webapp2.go:303: 404 :Request ID not found
