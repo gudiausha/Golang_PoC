@@ -1,8 +1,32 @@
 [
  {
   "Id": 0,
-  "Product_Name": "LG K10",
-  "Price": 80000,
-  "Availability": "Available"
+  "Product_Name": "Samsung",
+  "Price": 4000,
+  "Availability": "Yes"
+ },
+ {
+  "Id": 1,
+  "Product_Name": "Samsung1",
+  "Price": 4000,
+  "Availability": "Yes"
+ },
+ {
+  "Id": 2,
+  "Product_Name": "LG-K10",
+  "Price": 4000,
+  "Availability": "Yes"
+ },
+ {
+  "Id": 3,
+  "Product_Name": "hii",
+  "Price": 4000,
+  "Availability": "Yes"
+ },
+ {
+  "Id": 4,
+  "Product_Name": "check45",
+  "Price": 100,
+  "Availability": "yes"
  }
 ]
