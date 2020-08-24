@@ -8,6 +8,7 @@ E-comm Website is a basic web application containing all the CRUD actions. The u
 ### Pre-requisties 
 * Go initial setup
 * Mux package in Go. To download type `go get github.com/gorilla/mux` in cmd
+* Secure cookie package in Go. To download type `go get github.com/securecookie` in cmd
 
 ### Folder Structure
 The folder structure along with their descriptions is given below.
