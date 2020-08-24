@@ -100,7 +100,6 @@ func view(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "content-type")
 	w.Header().Set("Content-Type", "application/json")
-	//fmt.Println("Endpoint Hit: View list")
 	InfoLogger.Println("Endpoint Hit: View")
 	load_data()
 	//to return json response
@@ -158,19 +157,12 @@ func adlogin(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "content-type")
 	w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(http.StatusOK)
 	InfoLogger.Println("Endpoint Hit: Admin login")
 	new_credentials := new(Credential)
 	_ = json.NewDecoder(r.Body).Decode(&new_credentials)
-	// fmt.Println("Printing the credentials: ", new_credentials)
 	cred = append(cred, *new_credentials)
 	Name := new_credentials.UserName
-	Password := new_credentials.UserPassword
-
-	// fmt.Println("Printing the username credentials:", Name)
-	// fmt.Println("Printing the password credentials:", Password)
-	// fmt.Println("Printing the credentials: ", *new_credentials)
-
+	Password := new_credentials.UserPassword	
 	if Name == "admin" && Password == "adminpassword" {
 		// .. check credentials ..
 		InfoLogger.Println("Credentials checked")
@@ -208,7 +200,6 @@ func create(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "content-type")
 	w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(http.StatusOK)
 	InfoLogger.Println("Endpoint Hit: Add")
 	//a pointer to the predefined struct type is created here
 	new_product := new(Products)
@@ -261,7 +252,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 	w.Header().Set("Access-Control-Allow-Headers", "content-type")
 	w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(http.StatusOK)
 	InfoLogger.Println("Endpoint Hit : Update")
 	var flag bool //default false
 
@@ -317,7 +307,6 @@ func delete(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE")
 	w.Header().Set("Access-Control-Allow-Headers", "content-type")
 	w.Header().Set("Content-Type", "application/json")
-	//w.WriteHeader(http.StatusOK)
 	InfoLogger.Println("Endpoint Hit : Delete")
 	var delflag bool
 	// Get our params from the URL using Mux
