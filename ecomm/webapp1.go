@@ -168,7 +168,6 @@ func adlogin(w http.ResponseWriter, r *http.Request) {
 		InfoLogger.Println("Credentials checked")
 		setSession(Name, w)
 	} else {
-		w.WriteHeader(http.StatusUnauthorized)
 		value := map[int]string{
 			http.StatusUnauthorized: "Unauthorized user",
 		}
@@ -223,7 +222,6 @@ func create(w http.ResponseWriter, r *http.Request) {
 		InfoLogger.Println("Product added successfully:", *new_product)
 		json.NewEncoder(w).Encode(value)
 	} else {
-		w.WriteHeader(http.StatusMethodNotAllowed)
 		value := map[int]string{
 			http.StatusMethodNotAllowed: "Product Name not entered",
 		}
@@ -286,7 +284,6 @@ func update(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if !flag {
-		w.WriteHeader(http.StatusNotFound)
 		value := map[int]string{
 			http.StatusNotFound: "Request ID not found",
 		}
@@ -341,7 +338,6 @@ func delete(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	if !delflag {
-		w.WriteHeader(http.StatusNotFound)
 		value := map[int]string{
 			http.StatusNotFound: "Request ID not found",
 		}
